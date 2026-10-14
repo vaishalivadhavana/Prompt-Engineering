@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompt Engineering for Crime Investigators · Namibia</title>
+<meta name="description" content="Hands-on prompt engineering for Namibian law enforcement: cybercrime and digital-evidence examples to try in ChatGPT, Gemini, Claude and Perplexity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f1b2d;--bg:#f2f5f8;--blue:#003580;--red:#c8102e;--green:#00814a;--sun:#f2b705;--mut:#566175;--line:#d5dce5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "IBM Plex Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:Bitter,Georgia,serif;line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800}
+h2{font-size:1.8rem;font-weight:800;margin-top:0}
+h3{font-size:1.15rem;font-weight:600;margin-top:1.4em}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+nav{position:sticky;top:0;z-index:5;background:var(--ink);display:flex;gap:4px;overflow-x:auto;padding:0 12px;border-bottom:4px solid var(--sun)}
+nav a{color:#dbe4f0;text-decoration:none;padding:14px 12px;font-size:.9rem;white-space:nowrap}
+nav a:hover{background:#1b2c47;color:#fff}
+header{background:var(--ink);color:#fff;padding:56px 20px 64px}
+.w{max-width:880px;margin:0 auto}
+header p.lead{font-size:1.15rem;color:#c9d5e6;max-width:640px}
+.flag{display:flex;height:8px;max-width:120px;margin-bottom:22px}
+.flag i{flex:1}.flag i:nth-child(1){background:var(--blue)}.flag i:nth-child(2){background:var(--red)}.flag i:nth-child(3){background:var(--green)}
+.hero{background:#fff;color:var(--ink);padding:22px 24px;margin-top:28px;font-size:1.02rem}
+.hero small{display:block;color:var(--mut);margin-bottom:10px}
+.hero .bad{font-family:"IBM Plex Mono",monospace;color:var(--red)}
+mark{background:none;color:inherit;padding:2px 0;border-bottom:3px solid}
+.r{border-color:var(--blue)}.t{border-color:var(--red)}.c{border-color:var(--sun)}.i{border-color:var(--green)}.o{border-color:#7a4bd0}
+.key{margin:14px 0 0;font-size:.88rem;color:var(--mut)}
+.key b{border-bottom:3px solid;margin-right:12px;font-weight:600;color:var(--ink)}
+section{padding:60px 20px;border-bottom:1px solid var(--line)}
+section:nth-of-type(even){background:#fff}
+.w>p,.w>ul,.w>ol{max-width:700px}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin:18px 0}
+.box{border-left:5px solid var(--blue);padding:4px 0 4px 16px}
+.box.red{border-color:var(--red)}.box.green{border-color:var(--green)}.box.sun{border-color:var(--sun)}
+.box h3{margin-top:0}
+.rule{background:#fff8dc;border-left:5px solid var(--sun);padding:12px 16px;margin:18px 0;max-width:700px}
+section:nth-of-type(even) .rule{background:var(--bg)}
+.p{position:relative;margin:14px 0;max-width:780px}
+.p b.lab{display:block;font-size:.85rem;color:var(--mut);margin-bottom:4px}
+.p pre{margin:0;background:var(--ink);color:#e8eef7;padding:16px 16px 16px;font:14px/1.55 "IBM Plex Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.p button{position:absolute;right:0;top:0;background:var(--sun);color:var(--ink);border:0;font:600 .8rem "IBM Plex Sans";padding:6px 12px;cursor:pointer}
+.p.bad pre{border-left:5px solid var(--red)}.p.ok pre{border-left:5px solid var(--green)}
+table{border-collapse:collapse;width:100%;font-size:.95rem;margin:16px 0;display:block;overflow-x:auto}
+th,td{border-bottom:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--ink);color:#fff;font-weight:600}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0 0}
+.tabs button{border:2px solid var(--ink);background:#fff;font:600 .95rem "IBM Plex Sans";padding:8px 16px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--ink);color:#fff}
+.panel{display:none;border:2px solid var(--ink);padding:6px 22px 18px;margin-top:-2px;background:var(--bg)}
+.panel.on{display:block}
+footer{background:var(--ink);color:#b9c6d9;padding:36px 20px;font-size:.9rem}
+footer a{color:var(--sun)}
+</style>
+</head>
+<body>
+<nav aria-label="Sections">
+<a href="#llm">How LLMs work</a><a href="#limits">Limits</a><a href="#rules">Data rules</a><a href="#anatomy">Anatomy</a><a href="#types">Techniques</a><a href="#advanced">Advanced</a><a href="#case">Practice case</a><a href="#tools">Four tools</a><a href="#skills">Skills</a><a href="#wrap">Checklist</a>
+</nav>
+
+<header><div class="w">
+<div class="flag" aria-hidden="true"><i></i><i></i><i></i></div>
+<h1>Talk to AI like an investigator would</h1>
+<p class="lead">A hands-on guide for Namibian law enforcement officials: how large language models work, where they fail, and how to write prompts that make ChatGPT, Gemini, Claude and Perplexity useful partners in cybercrime and digital-evidence work, without giving them real case data.</p>
+<div class="hero">
+<small>Most officers type <span class="bad">analyse this fraud case</span>. By the end of the session you'll type:</small>
+<mark class="r">You are a senior cybercrime analyst supporting the Namibian Police.</mark>
+<mark class="t">Review the mock mobile-wallet transactions below and identify the likely mule account.</mark>
+<mark class="c">This is a fictional case from March 2026, amounts in N$, with six reported scam calls.</mark>
+<mark class="i">Use only the data given, show every calculation, and say "not sure" rather than guess.</mark>
+<mark class="o">Finish with a 5-line briefing for the unit commander.</mark>
+<p class="key"><b class="r">Role</b><b class="t">Task</b><b class="c">Context</b><b class="i">Instructions</b><b class="o">Output format</b></p>
+</div>
+</div></header>
+
+<section id="llm"><div class="w">
+<h2>What is an LLM?</h2>
+<p>A <strong>Large Language Model</strong> is a program trained on huge amounts of text (books, websites, reports, code) that learned the statistical patterns of language. Given some text, it predicts the most likely next piece of text. It does not look facts up or reason like a detective.</p>
+<div class="grid">
+<div class="box"><h3>Tokens</h3>Text is cut into <em>tokens</em> (about ¾ of an English word each). Your prompt, any files and the reply must all fit inside the model's <strong>context window</strong>. Share a sample of a large log file, not the whole thing.</div>
+<div class="box red"><h3>Prediction, not verification</h3>The model writes the most <em>plausible-sounding</em> continuation. A made-up IP address owner sounds just as plausible as a real one.</div>
+<div class="box green"><h3>Numbers are awkward</h3>Amounts like <code>2,150.75</code> get split into pieces, so mental arithmetic slips. For totals and counts, tell the tool to <strong>run code</strong>.</div>
+</div>
+</div></section>
+
+<section id="limits"><div class="w">
+<h2>Four limitations every investigator must know</h2>
+<div class="grid">
+<div class="box red"><h3>1. Hallucination</h3>Invented sections of an Act, fake case citations, a confident but made-up "owner" of a phone number. <strong>Rule:</strong> verify every legal reference in the official statute or Government Gazette.</div>
+<div class="box red"><h3>2. Knowledge cutoff</h3>New scam types, new app versions and recent amendments may be missing. <strong>Rule:</strong> use a search-enabled tool and open the cited source yourself.</div>
+<div class="box red"><h3>3. Bias</h3>Assuming a foreign context, or stereotyping a community, region or language group. <strong>Rule:</strong> ask "what else could explain this?" and never let AI output name a suspect.</div>
+<div class="box red"><h3>4. No human judgment</h3>It cannot decide reasonable suspicion, admissibility, chain of custody or whether to arrest. <strong>Rule:</strong> those calls belong to you and the prosecutor.</div>
+</div>
+<h3>See it happen: paste both into any of the four tools with no file attached</h3>
+<div class="p bad"><b class="lab">Risky prompt</b><button>Copy</button><pre>What is the total amount stolen in my fraud case and which suspect is behind it?</pre></div>
+<div class="p ok"><b class="lab">Safer prompt</b><button>Copy</button><pre>I will share a mock transaction list. Only use numbers you compute from the data I give you. Do not name or accuse any person. If something needs outside information (for example who owns a number), say so and tell me which official channel could confirm it, instead of estimating.</pre></div>
+</div></section>
+
+<section id="rules"><div class="w">
+<h2>The golden rule: AI assists, the officer decides</h2>
+<div class="grid">
+<div class="box green"><h3>Good uses</h3>Explain a technical concept · summarise a long public report · draft a timeline from <em>mock</em> data · suggest what to check next · critique your report as a defence lawyer would · quiz you before a court appearance.</div>
+<div class="box sun"><h3>Must stay with you</h3>The decision to investigate · what counts as evidence · chain of custody · identifying suspects · legal grounds for any action · the signed statement and final report, in your own words.</div>
+</div>
+<div class="rule"><strong>Never paste into a public AI tool:</strong> real names, ID or phone numbers, victim or witness statements, case numbers, informant details, unreleased evidence, or anything classified. Use fictional or fully anonymised data. Follow your agency's AI policy, and check each tool's privacy settings (for example training opt-out or temporary chat) before use.</div>
+<p><strong>Ground it.</strong> Give the tool the document or data and tell it to answer <em>only</em> from that. Grounded answers hallucinate far less.</p>
+</div></section>
+
+<section id="anatomy"><div class="w">
+<h2>The five parts of a good prompt</h2>
+<table>
+<tr><th>Part</th><th>It answers</th><th>Investigation example</th></tr>
+<tr><td>Role</td><td>Who should the AI act as?</td><td>"Digital forensics trainer", "senior fraud analyst", "defence counsel reviewing my report"</td></tr>
+<tr><td>Task</td><td>What exactly must it do?</td><td>"Build a timeline", "find repeated receivers", "critique this chain-of-custody note"</td></tr>
+<tr><td>Context</td><td>What does it need to know?</td><td>Case type, dates, currency (N$), what each column means, what you already tried</td></tr>
+<tr><td>Instructions</td><td>What rules apply?</td><td>"Use only the data", "don't accuse anyone", "mark uncertain points [CHECK]"</td></tr>
+<tr><td>Output format</td><td>What should the answer look like?</td><td>A table, a numbered timeline, a 5-line commander's brief, Python code with comments</td></tr>
+</table>
+<div class="p bad"><b class="lab">Weak</b><button>Copy</button><pre>explain phishing</pre></div>
+<div class="p ok"><b class="lab">Strong</b><button>Copy</button><pre>Act as a cybercrime trainer. Explain SMS phishing ("smishing") aimed at mobile-money users to constable-level officers in Namibia who are not technical. Use one fictional example message, list 5 warning signs, and end with 3 questions an officer should ask a victim when taking the first report. Keep it under 300 words.</pre></div>
+</div></section>
+
+<section id="types"><div class="w">
+<h2>Four types of prompting</h2>
+<h3>1. Zero-shot: just ask</h3>
+<div class="p"><button>Copy</button><pre>These server log times are in UTC. Convert each to Namibian time (CAT, UTC+2), keep the order, and state the assumption you made:
+2026-03-02 07:14, 2026-03-02 07:20, 2026-03-02 07:31, 2026-03-02 08:05</pre></div>
+<h3>2. Few-shot: show examples first</h3>
+<div class="p"><button>Copy</button><pre>Classify each scam message as Phishing, Investment, Romance or Other.
+
+"Your wallet is locked. Click this link to verify" → Phishing
+"Double your N$ in 24 hours, send to this number" → Investment
+"I am a soldier abroad and need your help to send money" → Romance
+
+Now classify:
+"Your parcel is held at customs, pay N$150 to release it"
+"Join our group chat for guaranteed forex returns"
+"I love you, please buy me a gift card so I can visit"</pre></div>
+<h3>3. Chain-of-thought: reason in steps</h3>
+<div class="p"><button>Copy</button><pre>Six victims each sent money to one wallet, which then forwarded it onward. Before recommending anything, work step by step:
+1. What pattern do these transfers show?
+2. What are two innocent explanations?
+3. What extra data would separate the explanations?
+4. Which lawful channel would I use to get that data?
+5. Your final assessment, with one line of reasoning. Do not name any person.</pre></div>
+<h3>4. Role-based: give the AI a persona</h3>
+<div class="p"><button>Copy</button><pre>Act as a defence lawyer cross-examining a police investigator. Read the mock investigation summary below and list the 5 biggest weaknesses a court could attack, most serious first. Be blunt.
+
+[PASTE MOCK SUMMARY]</pre></div>
+</div></section>
+
+<section id="advanced"><div class="w">
+<h2>Advanced techniques</h2>
+<p><strong>Structured output.</strong> Instead of "tell me about tools", ask: <em>"Compare Autopsy, Wireshark and Cellebrite-style extraction tools in a table: Best for | Skill needed | Cost type | Common pitfall."</em></p>
+<h3>Separate data from instructions with tags</h3>
+<div class="p"><button>Copy</button><pre>&lt;instructions&gt;
+Summarise the report in the report tags for a briefing note. Use only the report. Give the page number for every claim.
+&lt;/instructions&gt;
+
+&lt;report&gt;
+[PASTE A PUBLIC REPORT, OR ATTACH THE PDF]
+&lt;/report&gt;</pre></div>
+<h3>Allow "I don't know"</h3>
+<div class="p"><button>Copy</button><pre>If the data doesn't support a conclusion, or you need information you don't have, say so instead of guessing. Mark anything uncertain with [CHECK].</pre></div>
+<h3>Ask me first</h3>
+<div class="p"><button>Copy</button><pre>I need a plan to trace the flow of money in a mobile-wallet scam (mock case). Before suggesting anything, ask me up to 5 questions about my data, powers and limits that would change your advice.</pre></div>
+<h3>Prompt chaining</h3>
+<ol>
+<li>"Describe this dataset and list its data quality problems."</li>
+<li>"Write code to fix problems 1 and 3. Leave 2; I will decide."</li>
+<li>"Now build a timeline of the cleaned data."</li>
+<li>"Draft a methods note describing exactly what we did, so it can be explained in court."</li>
+</ol>
+<h3>Self-critique</h3>
+<div class="p"><button>Copy</button><pre>Now review your own analysis as a sceptical prosecutor would. What did you assume? What could be wrong? What would you verify before relying on this?</pre></div>
+</div></section>
+
+<section id="case"><div class="w">
+<h2>Practice case: the mock wallet scam</h2>
+<p>One small, deliberately messy and <strong>entirely fictional</strong> dataset is used for every demo. Save it as <code>transactions.csv</code> or paste it straight into the chat. Hidden problems to spot: inconsistent town names, a duplicate row, a missing time, a negative amount and a missing amount.</p>
+<div class="p"><b class="lab">transactions.csv (10 rows, N$)</b><button>Copy</button><pre>txn_id,date,time,sender,receiver,amount_nad,location,channel
+T01,2026-03-02,09:14,W101,M501,500,Windhoek,wallet
+T02,2026-03-02,09:20,W102,M501,750,windhoek,wallet
+T03,2026-03-02,09:31,W103,M501,1200,Windhoek,wallet
+T04,2026-03-02,10:05,M501,M502,2300,Oshakati,wallet
+T05,2026-03-03,,W104,M501,900,Wdh,wallet
+T06,2026-03-03,08:47,M502,M503,2200,Walvis Bay,ATM
+T07,2026-03-03,08:47,M502,M503,2200,Walvis Bay,ATM
+T08,2026-03-04,14:12,W105,M501,-300,Windhoek,wallet
+T09,2026-03-04,23:58,M503,M504,2150,Rundu,ATM
+T10,2026-03-05,07:30,W106,M501,,Windhoek,wallet</pre></div>
+<h3>Demo 1: first look and data quality</h3>
+<div class="p"><button>Copy</button><pre>You are a fraud analyst mentoring a junior officer. This is a fictional mobile-wallet case; amounts are in N$.
+1. Describe the structure and each column's data type.
+2. List every data quality problem with the row IDs.
+3. Give totals per receiver, computed with code, not estimated.
+4. Name 3 patterns worth investigating. Treat them as observations, not proof.
+5. Suggest 3 follow-up questions.
+Use only the data below.
+
+&lt;data&gt;[PASTE transactions.csv]&lt;/data&gt;</pre></div>
+<h3>Demo 2: clean it and map the money trail</h3>
+<div class="p"><button>Copy</button><pre>Write Python (pandas only, every step commented) that: standardises location names, flags duplicates and impossible amounts WITHOUT deleting them, then prints the path of money from the W-accounts to the final ATM withdrawal. After the code, write 3 sentences describing the cleaning decisions as they would appear in an investigation note.</pre></div>
+<h3>Demo 3: hypotheses and alternatives</h3>
+<div class="p"><button>Copy</button><pre>From the cleaned data, state two competing hypotheses for account M501 (for example "mule account" versus "small trader receiving payments"). For each, list what evidence supports it, what contradicts it, and which lawful request would settle it. State clearly what this data does NOT prove.</pre></div>
+<h3>Demo 4: timeline chart or dashboard</h3>
+<div class="p"><button>Copy</button><pre>Build a one-page visual of this case: a timeline of transfers, a bar chart of total received per account, and a flow diagram from victims to cash-out. Label axes, note any rows you excluded, and keep it readable when projected.</pre></div>
+<h3>Demo 5: briefing and public awareness message</h3>
+<div class="p"><button>Copy</button><pre>1. Write a 5-line briefing for the unit commander: what we know, what we don't, next 3 steps.
+2. Write a 60-word public awareness SMS about wallet-reversal scams in simple English.
+3. Translate the SMS into Afrikaans and Oshiwambo, and mark each translation [CHECK WITH NATIVE SPEAKER].</pre></div>
+</div></section>
+
+<section id="tools"><div class="w">
+<h2>Same prompt, four tools</h2>
+<p>Run the <em>same</em> prompt in each tool and compare. Features, limits and plans change often, so check each tool's current settings before class.</p>
+<div class="tabs" role="tablist">
+<button role="tab" aria-selected="true" data-t="a">ChatGPT</button><button role="tab" aria-selected="false" data-t="b">Gemini</button><button role="tab" aria-selected="false" data-t="c">Claude</button><button role="tab" aria-selected="false" data-t="d">Perplexity</button>
+</div>
+<div class="panel on" id="a">
+<h3>Try: data analysis on the mock CSV</h3>
+<p>Good for: running code on an uploaded file, tables and charts. Upload <code>transactions.csv</code> and run Demo 1 and Demo 2. Check that totals come from code it actually ran.</p>
+<div class="p"><button>Copy</button><pre>Using the uploaded mock transactions.csv, run code to compute total received per account, flag duplicate and impossible rows, and plot money received by M501 per day. Show the code you ran and list any assumptions.</pre></div>
+</div>
+<div class="panel" id="b">
+<h3>Try: current information and multilingual drafting</h3>
+<p>Good for: search-backed answers and drafting inside Google tools. Compare its Afrikaans and Oshiwambo output with a native speaker's view.</p>
+<div class="p"><button>Copy</button><pre>Draft a 60-word public awareness SMS warning Namibians about fake "wallet locked" messages. Give it in English, Afrikaans and Oshiwambo. Mark any phrase you are unsure of with [CHECK] and suggest one official source I could cite.</pre></div>
+</div>
+<div class="panel" id="c">
+<h3>Try: careful reading of a long document</h3>
+<p>Good for: long reports, tag-structured prompts, critique and interactive artifacts. Paste a long public report or a mock investigation note and use the tag format from the advanced section.</p>
+<div class="p"><button>Copy</button><pre>Act as a defence lawyer. In the mock note inside the tags, find unsupported claims, missing timestamps and anywhere I implied guilt. Quote the exact sentence each time and suggest neutral wording. Do not rewrite the whole note.
+
+&lt;note&gt;[PASTE MOCK INVESTIGATION NOTE]&lt;/note&gt;</pre></div>
+</div>
+<div class="panel" id="d">
+<h3>Try: cited research on public information</h3>
+<p>Good for: finding current, sourced material. Open every link yourself: a citation is a lead, not proof.</p>
+<div class="p"><button>Copy</button><pre>What are the most common mobile-money fraud methods reported in southern Africa in the last 3 years? For each method give the source, its date, and whether it is an official report, news article or opinion. Separate confirmed facts from claims, and say if you cannot find a reliable source.</pre></div>
+</div>
+<h3>Scorecard: fill in after running the same prompt everywhere</h3>
+<table>
+<tr><th>Check</th><th>ChatGPT</th><th>Gemini</th><th>Claude</th><th>Perplexity</th></tr>
+<tr><td>Numbers match the raw data (1–5)</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Said "not sure" when it should have</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Sources real and openable</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Avoided accusing a person</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Output format followed</td><td></td><td></td><td></td><td></td></tr>
+</table>
+</div></section>
+
+<section id="skills"><div class="w">
+<h2>Eight AI skills for investigators</h2>
+<table>
+<tr><th>Skill</th><th>Prompt to try (mock data only)</th><th>Always check</th></tr>
+<tr><td>Research and summarising</td><td>"Summarise this public cybercrime report in 10 bullets with page numbers."</td><td>Page numbers against the PDF</td></tr>
+<tr><td>Report writing</td><td>"Give comments only: list the 5 weakest sentences in my mock report and why."</td><td>Facts still match your notes</td></tr>
+<tr><td>Briefings and documents</td><td>"Make a 10-slide briefing on SIM-swap fraud for new recruits."</td><td>Every fact and figure</td></tr>
+<tr><td>Data and spreadsheets</td><td>"Summarise trends in this mock call-record sheet and draw 2 charts."</td><td>2–3 numbers by hand</td></tr>
+<tr><td>Translation</td><td>"Translate this victim advice into simple Afrikaans and Oshiwambo."</td><td>A native speaker reads it</td></tr>
+<tr><td>Training and exam prep</td><td>"Quiz me on digital evidence handling, one MCQ at a time."</td><td>Your agency's SOP</td></tr>
+<tr><td>Planning</td><td>"Plan a 3-day cyber awareness drive across 4 towns in a table."</td><td>Logistics and budget</td></tr>
+<tr><td>Visuals</td><td>"Draw a flowchart of the first-response steps for a hacked account."</td><td>Legal steps are accurate</td></tr>
+</table>
+</div></section>
+
+<section id="wrap"><div class="w">
+<h2>Checklist and next steps</h2>
+<ul>
+<li>An LLM predicts the next token. Plausible does not mean correct.</li>
+<li>Write prompts with role, task, context, instructions and output format.</li>
+<li>Verify every number, citation and legal reference; ask the tool to run code for calculations.</li>
+<li>Keep real case, victim and informant data out of public tools.</li>
+<li>Run the same prompt in more than one tool and compare.</li>
+<li>AI assists. The officer decides and signs.</li>
+</ul>
+<h3>Reusable project instructions</h3>
+<div class="p"><button>Copy</button><pre>You are my training assistant for cybercrime investigation practice. Use only the mock files I provide. Run code for every calculation; never estimate numbers. Never name or accuse a real person. If unsure or missing information, say so and mark [CHECK]. Never invent legal sections or case citations. When I ask for feedback on my writing, give comments instead of rewriting it.</pre></div>
+</div></section>
+
+<footer><div class="w">
+<p>Prompt Engineering for Crime Investigators · Namibia. Training material using fictional data only; verify all legal content against official sources.</p>
+<p>Facilitator: [YOUR NAME, ROLE]. Structure adapted from <a href="https://poojan14.github.io/claude-prompting-skills/">Prompt Engineering with Claude</a>. Remove or edit this credit line as appropriate.</p>
+</div></footer>
+
+<script>
+document.querySelectorAll('.p button').forEach(function(b){b.addEventListener('click',function(){var t=b.parentNode.querySelector('pre').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){b.textContent='Copied'},function(){b.textContent='Select and copy'});setTimeout(function(){b.textContent='Copy'},1800)})});
+document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tabs button').forEach(function(x){x.setAttribute('aria-selected',x===b)});document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id===b.dataset.t)})})});
+</script>
+</body>
+</html>
